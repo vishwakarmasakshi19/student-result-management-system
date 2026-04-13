@@ -1,0 +1,64 @@
+{% extends 'admin_base.html' %}
+{% block content %}
+
+<div class="container">
+    <h2>Edit Result - {{ student.name }}</h2>
+
+    {% if messages %}
+        {% for m in messages %}
+            <div class="alert alert-success">{{ m }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="card p-4 shadow-sm">
+        {% csrf_token %}
+
+        <!-- Class Info -->
+        <div class="mb-3">
+            <label class="form-label">Class Name</label>
+            <div>
+                {{ student.student_class.class_name }} 
+                ({{ student.student_class.section }})
+            </div>
+        </div>
+
+        <!-- Student Name -->
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <div>{{ student.name }}</div>
+        </div>
+
+        <!-- Marks Table -->
+        <h5 class="mt-4">Subject and Marks</h5>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in results %}
+                <tr>
+                    <td>{{ r.subject.subject_name }}</td>
+
+                    <!-- Hidden ID -->
+                    <input type="hidden" name="id[]" value="{{ r.id }}">
+
+                    <!-- Marks -->
+                    <td>
+                        <input type="number" name="marks[]" 
+                               value="{{ r.marks }}" 
+                               class="form-control" required>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">Update Result</button>
+    </form>
+</div>
+
+{% endblock %}

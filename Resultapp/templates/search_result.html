@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow">
+                
+                <div class="card-header text-center bg-dark text-white">
+                    <h4>Student Search Result</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    {% if messages %}
+                        {% for m in messages %}
+                            <div class="alert alert-danger text-center">{{ m }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post" action="{% url 'check_result' %}">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Enter Roll ID</label>
+                            <input type="text" class="form-control" name="rollid" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Select Class</label>
+                            <select class="form-control" name="class" required>
+                                <option value="">Select Class</option>
+                                {% for c in classes %}
+                                    <option value="{{ c.id }}">
+                                        {{ c.class_name }} ({{ c.section }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">
+                            Search Result
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

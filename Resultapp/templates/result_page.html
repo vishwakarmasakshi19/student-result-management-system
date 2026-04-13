@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container py-5" id="example">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow">
+                
+                <div class="card-header d-flex justify-content-between bg-dark text-white">
+                    <h4>Student Result Details</h4>
+
+                    <!-- PRINT BUTTON -->
+                    <i class="fa fa-print fa-2x no-print" style="cursor:pointer" onclick="printResult()"></i>
+                </div>
+
+                <div class="card-body p-4">
+
+                    {% if messages %}
+                        {% for m in messages %}
+                            <div class="alert alert-{% if m.tags == 'error' %}danger{% else %}{{ m.tags }}{% endif %}">
+                                {{ m }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <p><strong>Student Name:</strong> {{ student.name }}</p>
+                    <p><strong>Roll Id:</strong> {{ student.roll_id }}</p>
+                    <p><strong>Class:</strong> {{ student.student_class.class_name }} ({{ student.student_class.section }})</p>
+
+                    {% if results %}
+                    <table class="table table-bordered mt-4 text-center">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Subject</th>
+                                <th>Marks</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for r in results %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ r.subject.subject_name }}</td>
+                                <td>{{ r.marks }}</td>
+                            </tr>
+                            {% endfor %}
+
+                            <tr>
+                                <th colspan="2">Total Marks</th>
+                                <th>{{ total_marks }} / {{ max_total }}</th>
+                            </tr>
+
+                            <tr>
+                                <th colspan="2">Percentage</th>
+                                <th>{{ percentage }}%</th>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    {% else %}
+                        <div class="alert alert-warning text-center">
+                            Your result is not declared yet.
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRINT SCRIPT -->
+<script>
+function printResult() {
+    var content = document.getElementById("example").innerHTML;
+
+    var win = window.open("", "", "height=600,width=800");
+
+    win.document.write('<html><head><title>Print Result</title>');
+    win.document.write('<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">');
+
+    // Hide print button
+    win.document.write('<style>.no-print{display:none;} @media print{body{-webkit-print-color-adjust: exact;}}</style>');
+
+    win.document.write('</head><body>');
+    win.document.write(content);
+    win.document.write('</body></html>');
+
+    win.document.close();
+    win.focus();
+    win.print();
+}
+</script>
+
+{% endblock %}
